@@ -4,7 +4,7 @@ from tensorflow.keras.layers import (Add, Conv2D, Input, Concatenate,
 from tensorflow.keras.models import Model
 
 from .blocks import (RecurrentConvBlock, ResidualBlock, ConvBlock, 
-                     DenseBlock, TransitionBlock, LocalizedConvBlock,
+                     DenseBlock, TransitionBlock,
                      get_dropout_layer)
 from ..utils import checkarg_backbone, checkarg_dropout_variant
 
@@ -120,13 +120,6 @@ def recnet_pin(
         s = tf.expand_dims(s, 1)
         s = tf.repeat(s, time_window, axis=1)
         x = Concatenate()([x, s])
-
-    #---------------------------------------------------------------------------
-    # Localized convolutional layer
-    if localcon_layer:
-        lcb = LocalizedConvBlock(filters=2, use_bias=True)
-        lws = TimeDistributed(lcb, name='localized_conv_block')(x)
-        x = Concatenate()([x, lws])
 
     #---------------------------------------------------------------------------
     # Last conv layers

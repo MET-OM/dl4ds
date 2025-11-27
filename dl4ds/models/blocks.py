@@ -4,7 +4,7 @@ from tensorflow.keras.layers import (Add, Conv2D, ConvLSTM2D, Concatenate,
                                      LayerNormalization, Activation, 
                                      Dropout, GaussianDropout,
                                      SpatialDropout2D, Conv2DTranspose, 
-                                     SpatialDropout3D, LocallyConnected2D,
+                                     SpatialDropout3D,
                                      ZeroPadding2D, MaxPooling2D, Resizing,
                                      DepthwiseConv2D, Dense, Lambda)
 from ..utils import checkarg_dropout_variant
@@ -307,33 +307,6 @@ class TransitionBlock(tf.keras.layers.Layer):
             Y = self.conv(X)
             Y = self.activation(Y)
         return Y
-
-
-class LocalizedConvBlock(tf.keras.layers.Layer):
-    """ 
-    Localized convolutional block through a locally connected layer (1x1 kernel) 
-    with biases.
-    """
-    def __init__(self, filters=2, activation=None, use_bias=True, 
-                 name_sufix='', **kwargs):
-        super().__init__(name='LocalizedConvBlock' + name_sufix, **kwargs)
-        self.filters = filters
-        self.transition = TransitionBlock(filters=filters)
-        self.localconv = LocallyConnected2D(
-            filters=filters,
-            kernel_size=(1, 1),
-            implementation=3,
-            bias_initializer='zeros',
-            use_bias=use_bias,
-            activation=activation)
-
-    def call(self, X):
-        Y = self.transition(X)
-        Y = self.localconv(Y)
-        return Y
-
-    def compute_output_shape(self, input_shape):
-        return (input_shape[0], input_shape[1], input_shape[2], self.filters)
 
 
 class RecurrentConvBlock(tf.keras.layers.Layer): 

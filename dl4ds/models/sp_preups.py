@@ -4,7 +4,7 @@ from tensorflow.keras.layers import (Add, Conv2D, Input, Concatenate,
 from tensorflow.keras.models import Model
 
 from .blocks import (ResidualBlock, ConvBlock, DenseBlock, TransitionBlock,
-                     LocalizedConvBlock, SubpixelConvolutionBlock, 
+                     SubpixelConvolutionBlock, 
                      DeconvolutionBlock, EncoderBlock, PadConcat, 
                      get_dropout_layer, ConvNextBlock, ResizeConvolutionBlock)
 from ..utils import checkarg_backbone, checkarg_dropout_variant
@@ -151,12 +151,6 @@ def net_pin(
             x = TransitionBlock(n_filters, activation=activation)(x)
     
     #---------------------------------------------------------------------------
-    # Localized convolutional layer
-    if localcon_layer:
-        lws = LocalizedConvBlock(filters=2, use_bias=True)(x)
-        x = Concatenate()([x, lws])
-
-    #---------------------------------------------------------------------------
     # HR aux channels are processed
     if auxvar_array_is_given:
         if backbone_block == 'convnext':
@@ -285,12 +279,6 @@ def unet_pin(
             attention=attention, name='DecoderConvBlock' + str(j+1))(x)
 
     x = get_dropout_layer(dropout_rate, dropout_variant)(x)
-
-    #---------------------------------------------------------------------------
-    # Localized convolutional layer
-    if localcon_layer:
-        lws = LocalizedConvBlock(filters=2, use_bias=True)(x)
-        x = Concatenate()([x, lws])
 
     #---------------------------------------------------------------------------
     # HR aux channels are processed
