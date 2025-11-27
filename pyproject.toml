@@ -23,7 +23,7 @@ dependencies = [
     "numpy",
     "scipy",
     "matplotlib",
-    "xarray",
+    "xarray[complete]",
     "tensorflow[and-cuda]",
     "scikit-learn",
     "opencv-python",
