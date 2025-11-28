@@ -170,7 +170,7 @@ def predict(
         model = trainer
 
     upsampling = model.name.split('_')[-1]
-    dim = len(model.input.shape)
+    dim = len(model.input[0].shape)
     if dim == 5 and time_window is None:
        raise ValueError('`time_window` must be provided for spatiotemporal model')
 

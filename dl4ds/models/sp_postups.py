@@ -5,7 +5,7 @@ from tensorflow.keras.models import Model
 
 from .blocks import (ResidualBlock, ConvBlock, DeconvolutionBlock,
                      DenseBlock, TransitionBlock, SubpixelConvolutionBlock,
-                     LocalizedConvBlock, get_dropout_layer, ConvNextBlock,
+                     get_dropout_layer, ConvNextBlock,
                      ResizeConvolutionBlock)
 from ..utils import (checkarg_backbone, checkarg_upsampling, 
                     checkarg_dropout_variant)
@@ -178,12 +178,6 @@ def net_postupsampling(
         x = TransitionBlock(init_n_filters, activation=activation, 
                             name='TransitionDC')(x)
         x = DeconvolutionBlock(scale, n_filters, activation)(x)
-    
-    #---------------------------------------------------------------------------
-     # Localized convolutional layer
-    if localcon_layer:
-        lws = LocalizedConvBlock(filters=2, use_bias=True)(x)
-        x = Concatenate()([x, lws])
     
     #---------------------------------------------------------------------------
     # HR aux channels are processed

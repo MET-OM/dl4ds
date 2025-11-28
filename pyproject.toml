@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=62", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dl4ds"
+description = "Deep Learning for empirical DownScaling"
+readme = { file = "README.md", content-type = "text/markdown" }
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Carlos Alberto Gomez Gonzalez", email = "carlos.gomez@bsc.es" }
+]
+keywords = [
+    "deep learning",
+    "downscaling",
+    "super-resolution",
+    "neural networks",
+    "Earth data",
+    "EO"
+]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "xarray[complete]",
+    "tensorflow[and-cuda]",
+    "scikit-learn",
+    "opencv-python",
+    "joblib",
+    "seaborn",
+    "absl-py",
+    "ipykernel",
+]
+dynamic = ["version"]
+
+[project.optional-dependencies]
+horovod = ["horovod"]
+
+[project.urls]
+Homepage = "https://github.com/carlgogo/dl4ds"
+
+[tool.setuptools.dynamic]
+version = { attr = "dl4ds.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["dl4ds", "dl4ds.*"]
+

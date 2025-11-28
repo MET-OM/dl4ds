@@ -2,7 +2,6 @@ import tensorflow as tf
 import numpy as np
 import scipy as sc
 import xarray as xr
-import ecubevis as ecv
 
 from . import POSTUPSAMPLING_METHODS
 from .utils import crop_array, resize_array, checkarray_ndim
@@ -251,43 +250,6 @@ def create_pair_hr_lr(
     else:
         static_array_hr = None
 
-    if debug: 
-        if is_spatiotemp:
-            print(f'HR array: {hr_array.shape}, LR array: {lr_array.shape}, Auxiliary array: {season_array_hr.shape}')
-            if patch_size is not None:
-                print(f'Crop X,Y: {crop_x}, {crop_y}')
-        
-            ecv.plot_ndarray(np.squeeze(hr_array), dpi=100, interactive=False, plot_title=('HR array'))
-            for i in range(lr_array.shape[-1]):
-                ecv.plot_ndarray(np.squeeze(lr_array[:,:,:,i]), dpi=100, interactive=False, 
-                                plot_title=(f'LR array, variable {i+1}'))
-            
-            if static_array_hr is not None:
-                ecv.plot_ndarray(tuple(np.moveaxis(static_array_hr, -1, 0)), interactive=False, 
-                                dpi=100,plot_title='Auxiliary array HR')
-
-        else:
-            if static_array_hr is not None:
-                print(f'HR array: {hr_array.shape}, LR array {lr_array.shape}, Auxiliary array HR {static_array_hr.shape}')
-            else:
-                print(f'HR array: {hr_array.shape}, LR array {lr_array.shape}')
-            if patch_size is not None:
-                print(f'Crop X,Y: {crop_x}, {crop_y}')
-            
-            ecv.plot_ndarray(np.squeeze(hr_array), dpi=100, interactive=False, 
-                            subplot_titles='HR array')
-            
-            ecv.plot_ndarray(np.moveaxis(np.squeeze(lr_array), -1, 0), dpi=100, interactive=False, 
-                            plot_title='LR array')
-            
-            if static_vars is not None or season is not None:
-                ecv.plot_ndarray(np.moveaxis(static_array_hr, -1, 0), interactive=False, dpi=100, 
-                                plot_title='HR auxiliary array')
-
-            if predictors is not None:
-                ecv.plot_ndarray(np.rollaxis(lr_array_predictors, 2, 0), dpi=100, interactive=False, 
-                                plot_title='LR predictors')
-
     if static_vars is not None or season is not None:
         return hr_array, lr_array, static_array_hr
     else:
@@ -355,9 +317,9 @@ def create_batch_hr_lr(
     batch_hr = np.asarray(batch_hr) 
     if static_vars is not None or season_i is not None:
         batch_aux_hr = np.asarray(batch_aux_hr)
-        return [batch_lr, batch_aux_hr], [batch_hr]
+        return (batch_lr, batch_aux_hr, ), (batch_hr, )
     else:
-        return [batch_lr], [batch_hr]
+        return (batch_lr, ), (batch_hr, )
 
 
 class DataGenerator(tf.keras.utils.Sequence):

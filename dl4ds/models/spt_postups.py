@@ -3,7 +3,7 @@ from tensorflow.keras.layers import (Add, Input, Concatenate, TimeDistributed)
 from tensorflow.keras.models import Model
 
 from .blocks import (RecurrentConvBlock, ConvBlock, SubpixelConvolutionBlock, 
-                     DeconvolutionBlock, LocalizedConvBlock, 
+                     DeconvolutionBlock,
                      get_dropout_layer, TransitionBlock, ResizeConvolutionBlock)
 from ..utils import (checkarg_backbone, checkarg_upsampling, 
                     checkarg_dropout_variant)
@@ -140,13 +140,6 @@ def recnet_postupsampling(
         s = tf.repeat(s, time_window, axis=1)
         x = Concatenate()([x, s])
     
-    #---------------------------------------------------------------------------
-    # Localized convolutional layer
-    if localcon_layer:
-        lcb = LocalizedConvBlock(filters=2, use_bias=True)
-        lws = TimeDistributed(lcb, name='localized_conv_block')(x)
-        x = Concatenate()([x, lws])
-
     #---------------------------------------------------------------------------
     # Last conv layers
     x = TransitionBlock(x.get_shape()[-1] // 2, name='TransitionLast')(x)

@@ -7,7 +7,6 @@ from sklearn.metrics import mean_squared_error
 from scipy.stats import spearmanr, pearsonr
 import os
 import seaborn as sns
-import ecubevis as ecv
 
 from .utils import checkarray_ndim, Timing
 
@@ -201,8 +200,6 @@ def compute_metrics(
         np.save(os.path.join(save_path, 'metrics_pergridpoint_rmse_map.npy'), temp_rmse_map)
     else:
         savepath = None
-    ecv.plot_ndarray(temp_rmse_map, dpi=dpi, subplot_titles=(subpti), cmap='viridis', 
-                     plot_size_px=plot_size_px, interactive=False, save=savepath)
 
     ### Normalized per grid point RMSE 
     norm_temp_rmse_map = temp_rmse_map / (np.mean(y_test) * 100)
@@ -216,8 +213,6 @@ def compute_metrics(
         np.save(os.path.join(save_path, 'metrics_pergridpoint_nrmse_map.npy'), norm_temp_rmse_map)
     else:
         savepath = None
-    ecv.plot_ndarray(norm_temp_rmse_map, dpi=dpi, subplot_titles=(subpti), cmap='viridis', 
-                     plot_size_px=plot_size_px, interactive=False, save=savepath)
 
     # Normalized mean bias
     nmeanbias = np.mean(y_test_hat - y_test, axis=0)
@@ -232,8 +227,6 @@ def compute_metrics(
         np.save(os.path.join(save_path, 'metrics_nmeanbias_map.npy'), nmeanbias)
     else:
         savepath = None
-    ecv.plot_ndarray(nmeanbias, dpi=dpi, subplot_titles=(subpti), cmap='viridis', 
-                     plot_size_px=plot_size_px, interactive=False, save=savepath)
 
     ### Spearman correlation coefficient
     spatial_spearman_corr = compute_correlation(y_test, y_test_hat, n_jobs=n_jobs, over='space')
@@ -258,8 +251,6 @@ def compute_metrics(
         np.save(os.path.join(save_path, 'metrics_pergridpoint_corrpears_map.npy'), temp_pearson_corrmap)
     else:
         savepath = None
-    ecv.plot_ndarray(temp_pearson_corrmap, dpi=dpi, subplot_titles=(subpti), cmap='magma', 
-                     plot_size_px=plot_size_px, interactive=False, save=savepath)
     
     ### Plotting violin plots: http://seaborn.pydata.org/tutorial/aesthetics.html
     sns.set_style("whitegrid") #{"axes.facecolor": ".9"}

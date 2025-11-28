@@ -403,7 +403,7 @@ class SupervisedTrainer(Trainer):
             validation_steps=self.validation_steps, 
             verbose=self.verbose if self.running_on_first_worker else False, 
             callbacks=callbacks,
-            use_multiprocessing=self.use_multiprocessing)
+        )
         
         if self.running_on_first_worker:
             self.test_loss = self.model.evaluate(self.ds_test, steps=self.test_steps, verbose=verbose)
